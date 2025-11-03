@@ -6,7 +6,7 @@ pipeline {
             steps {
                 sh '''
                   set -e
-                  composer install
+                  composer install --no-interaction --prefer-dist
                 '''
             }
         }
