@@ -4,8 +4,6 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                // Project preparation (install dependencies if needed)
-                echo 'Preparing project...'
                 sh '''
                   set -e
                   composer install --no-interaction --prefer-dist
@@ -15,8 +13,6 @@ pipeline {
 
         stage('Test') {
             steps {
-                // Running tests
-                echo 'Running tests...'
                 sh 'vendor/bin/phpunit --configuration phpunit.xml'
             }
         }
