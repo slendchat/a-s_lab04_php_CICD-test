@@ -14,8 +14,9 @@ pipeline {
         stage('Run Ansible Playbook') {
             steps {
                 sh """
-                    ansible-playbook \
-                        -i ansible_repo/hosts.ini \
+                    # Используем полный путь к ansible-playbook из venv
+                    /opt/venv/bin/ansible-playbook \\
+                        -i ansible_repo/hosts.ini \\
                         ansible_repo/setup_test_server.yml
                 """
             }
