@@ -1,8 +1,7 @@
 pipeline {
-    agent { label 'ssh-agent' }
+    agent { label 'ansible-agent' }
 
     stages {
-
         stage('Clone Ansible Repository') {
             steps {
                 sh '''
@@ -15,11 +14,9 @@ pipeline {
         stage('Run Ansible Playbook') {
             steps {
                 sh """
-                    docker exec ansible-agent bash -c '
-                        ansible-playbook \
-                            -i /home/ansible/work/hosts.ini \
-                            /home/ansible/work/setup_test_server.yml
-                    '
+                    ansible-playbook \
+                        -i ansible_repo/hosts.ini \
+                        ansible_repo/setup_test_server.yml
                 """
             }
         }
