@@ -2,11 +2,11 @@ pipeline {
     agent { label 'ansible-agent' }
 
     stages {
-        stage('Clone Ansible Repository') {
+        stage('Clone Application Repository') {
             steps {
                 sh '''
-                    rm -rf ansible_repo
-                    git clone https://github.com/slendchat/a-s_lab04_php_CICD-test.git ansible_repo
+                    rm -rf app_repo 
+                    git clone https://github.com/slendchat/a-s_lab04_php_CICD-test.git app_repo
                 '''
             }
         }
@@ -14,10 +14,11 @@ pipeline {
         stage('Run Ansible Playbook') {
             steps {
                 sh """
-                    # Используем полный путь к ansible-playbook из venv
+                    export PATH="/opt/venv/bin:\$PATH"
+
                     /opt/venv/bin/ansible-playbook \\
-                        -i ansible_repo/hosts.ini \\
-                        ansible_repo/setup_test_server.yml
+                        -i /home/ansible/ansible/hosts.ini \\
+                        /home/ansible/ansible/setup_test_server.yml
                 """
             }
         }
