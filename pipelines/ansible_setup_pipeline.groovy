@@ -1,24 +1,26 @@
 pipeline {
-    agent { label 'ansible-agent' }
+    agent { label 'ssh-agent' }
 
     stages {
-        stage('Clone Ansible Repo') {
+        stage('Run Ansible Setup') {
             steps {
-                sh '''
-                    rm -rf ansible
-                    git clone https://github.com/slendchat/a-s_lab04_php_CICD-test.git ansible
-                '''
-            }
-        }
-
-        stage('Run Ansible Playbook') {
-            steps {
-                sh '''
-                    cd ansible
-                    ansible-playbook -i hosts.ini setup_test_server.yml
-                '''
+                withCredentials([
+                    sshUserPrivateKey(
+                        credentialsId: 'ansible-key',
+                        keyFileVariable: 'SSH_KEY',
+                        usernameVariable: 'SSH_USER'
+                    )
+                ]) {
+                    sh """
+                    docker exec ansible-agent bash -c '
+                        export ANSIBLE_PRIVATE_KEY_FILE=$SSH_KEY
+                        ansible-playbook \
+                            -i /home/ansible/work/hosts.ini \
+                            /home/ansible/work/setup_test_server.yml
+                    '
+                    """
+                }
             }
         }
     }
 }
-
